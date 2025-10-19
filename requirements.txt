@@ -1,0 +1,6 @@
+flask
+flask-pymongo
+werkzeug
+scikit-learn
+pandas
+numpy

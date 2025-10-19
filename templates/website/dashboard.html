@@ -1,0 +1,38 @@
+{% extends "layouts/website_layout.html" %}
+{% block title %}Student Dashboard{% endblock %}
+
+{% block content %}
+<div class="classes-grid">
+
+    <!-- ✅ Dynamic Joined Classes -->
+    {% for jc in joined_classes %}
+    <a href="{{ url_for('student_class_detail', class_id=jc.class_info._id) }}" 
+   class="class-card text-decoration-none text-dark">
+
+        <div class="class-header"></div>
+        <div class="class-body">
+            <h5 class="class-title">{{ jc.class_info.class_name }}</h5>
+            <div class="class-section">
+                {{ jc.class_info.created_by_name }}
+            </div>
+        </div>
+    </a>
+    {% endfor %}
+
+
+    <script>
+        function getRandomGradient() {
+            const colors = ['#ff6b6b', '#6bc1ff', '#6bff95', '#ffde6b', '#c36bff', '#ff6bde', '#6bfff4'];
+            const color1 = colors[Math.floor(Math.random() * colors.length)];
+            let color2 = colors[Math.floor(Math.random() * colors.length)];
+            while (color1 === color2) {
+                color2 = colors[Math.floor(Math.random() * colors.length)];
+            }
+            return `linear-gradient(135deg, ${color1}, ${color2})`;
+        }
+        document.querySelectorAll('.class-header').forEach(header => {
+            header.style.background = getRandomGradient();
+        });
+    </script>
+</div>
+{% endblock %}

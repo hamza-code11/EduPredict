@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Student Dashboard</h3>
+
+<h5>Available Tasks</h5>
+<table class="table table-striped">
+  <thead><tr><th>Title</th><th>Marks</th><th>Due</th><th>Action</th></tr></thead>
+  <tbody>
+    {% for t in tasks %}
+    <tr>
+      <td>{{ t.title }}</td>
+      <td>{{ t.marks }}</td>
+      <td>{{ t.due_date_str if t.get('due_date_str') else '-' }}</td>
+      <td>
+        <a class="btn btn-sm btn-outline-primary" href="{{ url_for('upload_assignment', task_id=t.id) }}">Upload</a>
+      </td>
+    </tr>
+    {% else %}
+    <tr><td colspan="4">No tasks available.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<h5>Your Submissions</h5>
+<table class="table table-bordered">
+  <thead><tr><th>Task</th><th>File</th><th>Marks</th><th>Uploaded At</th></tr></thead>
+  <tbody>
+    {% for s in submissions %}
+    <tr>
+      <td>
+        {% set task = mongo.db.tasks.find_one({'_id': ObjectId(s.task_id)}) %}
+        {{ task.title if task else 'Deleted task' }}
+      </td>
+      <td>
+        {% if s.file_path %}
+          <a href="{{ url_for('static', filename=s.file_path.split('static/')[1]) }}" target="_blank">View</a>
+        {% else %}
+          -
+        {% endif %}
+      </td>
+      <td>{{ s.marks_obtained if s.marks_obtained is not none else '-' }}</td>
+      <td>{{ s.created_at.strftime("%Y-%m-%d %H:%M") if s.get('created_at') else '-' }}</td>
+    </tr>
+    {% else %}
+    <tr><td colspan="4">No submissions yet.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

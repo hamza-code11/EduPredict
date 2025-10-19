@@ -1,0 +1,120 @@
+{% extends "layouts/website_layout.html" %}
+{% block content %}
+
+<div class="container my-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-12 col-md-12">
+      <div class="card border-0 rounded-4 bg-white static-card">
+        <div class="card-body p-5">
+
+          <h2 class="fw-semibold text-primary mb-3">
+            <i class="fa-regular fa-comment-dots me-2"></i> Share Your Feedback
+          </h2>
+          <p class="text-muted mb-4">
+            We’d love to hear your thoughts and suggestions to help us improve your learning experience.
+          </p>
+
+          <!-- ✅ Feedback Form -->
+          <form id="feedbackForm" method="POST" action="{{ url_for('feedback') }}">
+            
+            <!-- Rating -->
+            <div class="mb-4">
+              <label class="form-label fw-semibold">Rate your experience:</label>
+              <div class="rating-stars d-flex gap-2">
+                {% for r in range(1,6) %}
+                  <i class="fas fa-star fs-3 text-secondary" data-value="{{ r }}"></i>
+                {% endfor %}
+              </div>
+              <input type="hidden" name="rating" id="ratingInput" value="0">
+            </div>
+
+            <!-- Message -->
+            <div class="mb-4">
+              <label for="message" class="form-label fw-semibold">Your Feedback</label>
+              <textarea
+                class="form-control border-1"
+                id="message"
+                name="message"
+                placeholder="Write your feedback here..."
+                maxlength="500"
+                required
+                style="min-height: 140px; resize: none;">
+              </textarea>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary px-4 py-2 rounded-3">
+              <i class="fas fa-paper-plane me-2"></i> Submit Feedback
+            </button>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ✅ CSS -->
+<style>
+  /* Flat style – no shadow, no hover */
+  .static-card,
+  .card,
+  .form-control,
+  .btn,
+  textarea {
+    box-shadow: none !important;
+    transition: none !important;
+  }
+
+  /* Remove hover visual effects */
+  .card:hover,
+  .form-control:hover,
+  .btn:hover,
+  textarea:hover {
+    box-shadow: none !important;
+    transform: none !important;
+    border-color: inherit !important;
+  }
+
+  /* Star rating */
+  .rating-stars i {
+    cursor: pointer;
+    transition: color 0.3s ease, transform 0.2s ease;
+  }
+  .rating-stars i:hover {
+    transform: scale(1.2);
+    color: #facc15 !important;
+  }
+  .rating-stars i.active {
+    color: #facc15 !important;
+  }
+
+  /* Focus style */
+  textarea:focus,
+  .form-control:focus {
+    outline: none;
+    box-shadow: none !important;
+    border-color: #4361ee;
+  }
+</style>
+
+<!-- ✅ JS -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const stars = document.querySelectorAll('.rating-stars i');
+    const ratingInput = document.getElementById('ratingInput');
+
+    stars.forEach((star, idx) => {
+      star.addEventListener('click', () => {
+        ratingInput.value = idx + 1;
+        stars.forEach((s, i) => {
+          s.classList.toggle('active', i <= idx);
+          s.classList.toggle('text-warning', i <= idx);
+          s.classList.toggle('text-secondary', i > idx);
+        });
+      });
+    });
+  });
+</script>
+
+{% endblock %}

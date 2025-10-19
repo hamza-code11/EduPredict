@@ -1,0 +1,400 @@
+{% extends "layouts/website_layout.html" %}
+{% block title %}{{ assignment.title }} - EduPortal{% endblock %}
+
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ assignment.title }} - EduPortal</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 512'%3E%3Cpath fill='black' d='M622.34 153.2c12.46 4.86 20.66 16.79 20.66 30.2s-8.2 25.34-20.66 30.2L512 256.9v58.5c0 8.5-5.1 16.2-12.9 19.4l-144 64c-5.2 2.3-11.1 2.3-16.3 0l-144-64c-7.8-3.2-12.9-10.9-12.9-19.4v-58.5L17.66 213.6C5.2 208.7-3 196.8-3 183.4s8.2-25.3 20.7-30.2l300-116.2c7.8-3 16.6-3 24.4 0l280.24 116zM320 64L80 160l240 96 240-96L320 64zM480 384v96h32v-96h-32z'/%3E%3C/svg%3E">
+
+
+    <style>
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #10b981;
+            --accent: #f59e0b;
+            --dark: #1e293b;
+            --light: #f8fafc;
+            --gray: #64748b;
+            --card-bg: #ffffff;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .solid {
+            border: 2px solid red;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: linear-gradient(135deg, #f0f4ff 0%, #f8fafc 50%, #f0f9ff 100%);
+            color: var(--dark);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container-main {
+            max-width: 1400px;
+            padding: 30px 0px;
+        }
+
+        .assignment-panel,
+        .submission-panel {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 35px;
+            box-shadow: 0 15px 50px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+        }
+
+        .assignment-title {
+            font-weight: 800;
+            color: var(--dark);
+            font-size: 2.3rem;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--dark) 0%, var(--primary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .meta-line {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            margin-bottom: 35px;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: var(--light);
+            padding: 20px;
+            border-radius: 16px;
+            border-left: 4px solid var(--primary);
+            flex: 1;
+            min-width: 250px;
+            transition: all 0.3s ease;
+        }
+
+        .meta-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .meta-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.3rem;
+        }
+
+        .instructions-section {
+            margin-top: 45px;
+        }
+
+        .section-title {
+            font-weight: 700;
+            color: var(--dark);
+            margin-bottom: 25px;
+            font-size: 1.6rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--light);
+        }
+
+        .instructions-content {
+            background: var(--light);
+            padding: 30px;
+            border-radius: 16px;
+        }
+
+        .guidelines-list {
+            list-style: none;
+            padding: 0;
+            margin-top: 25px;
+        }
+
+        .guidelines-list li {
+            padding: 10px 0 10px 35px;
+            position: relative;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        .guidelines-list li:last-child {
+            border-bottom: none;
+        }
+
+        .guidelines-list li:before {
+            content: "✓";
+            color: var(--secondary);
+            font-weight: bold;
+            position: absolute;
+            left: 10px;
+        }
+
+        .submission-panel {
+            position: sticky;
+            top: 30px;
+        }
+
+        .submission-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .submission-icon {
+            width: 90px;
+            height: 90px;
+            background: linear-gradient(135deg, var(--secondary) 0%, #059669 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 2rem;
+        }
+
+        .upload-zone {
+            border: 2px dashed #cbd5e1;
+            border-radius: 16px;
+            padding: 35px 25px;
+            text-align: center;
+            margin-bottom: 25px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            background: var(--light);
+        }
+
+        .upload-zone:hover,
+        .upload-zone.dragover {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            border: none;
+            border-radius: 14px;
+            padding: 16px;
+            font-weight: 700;
+            width: 100%;
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
+        }
+
+        .file-info {
+            font-weight: 500;
+            color: var(--dark);
+            padding: 10px 15px;
+            background: var(--light);
+            border-radius: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            white-space: normal;
+            max-width: 100%;
+        }
+
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease forwards;
+        }
+
+        .delay-1 {
+            animation-delay: 0.1s;
+        }
+
+        .delay-2 {
+            animation-delay: 0.2s;
+        }
+
+        @media (max-width: 991px) {
+            .submission-panel {
+                margin-top: 30px;
+                position: static;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <div class="container-main">
+        <div class="row g-4">
+            <!-- Left Section -->
+            <div class="col-lg-8 col-md-12">
+                <div class="assignment-panel fade-in delay-1">
+                    <h1 class="assignment-title">{{ assignment.title }}</h1>
+
+                    <div class="meta-line fade-in delay-2">
+                        <div class="meta-item">
+                            <div class="meta-icon"><i class="fas fa-calendar-plus"></i></div>
+                            <div>
+                                <div class="meta-label">Assigned Date</div>
+                                <div class="meta-value">{{ assignment.due_date }}</div>
+                            </div>
+                        </div>
+                        <div class="meta-item">
+                            <div class="meta-icon"><i class="fas fa-clock"></i></div>
+                            <div>
+                                <div class="meta-label">Due Date</div>
+                                <div class="meta-value">{{ assignment.due_date }}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="instructions-section fade-in delay-3">
+                        <h2 class="section-title"><i class="fas fa-file-alt"></i> Assignment Instructions</h2>
+                        <div class="instructions-content">
+                            <p>{{ assignment.description }}</p>
+
+                            <h4 class="mt-4 mb-3 fw-bold text-dark">
+                                <i class="fas fa-clipboard-list me-2"></i> Submission Guidelines
+                            </h4>
+                            <ul class="guidelines-list">
+                                <li>Submit before the due date to avoid penalties.</li>
+                                <li>Accepted formats: PDF, DOC, DOCX, ZIP files.</li>
+                                <li>Max file size: 5MB.</li>
+                                <li>You can resubmit until the deadline.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Section -->
+            <div class="col-lg-4 col-md-12">
+                <div class="submission-panel fade-in delay-2">
+                    <div class="submission-header">
+                        <div class="submission-icon"><i class="fas fa-paper-plane"></i></div>
+                        <h3 class="fw-bold mb-1">Submit Your Work</h3>
+                        <p class="text-muted small">Upload your assignment files</p>
+                    </div>
+
+                    <form action="{{ url_for('submit_assignment', assignment_id=assignment['_id']) }}" method="POST"
+                        enctype="multipart/form-data" id="uploadForm">
+                        <div class="upload-zone" id="uploadZone" onclick="document.getElementById('fileInput').click()">
+                            <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                            <div class="upload-text fw-bold">Drag & Drop or Click</div>
+                            <input type="file" class="d-none" id="fileInput" name="file" required>
+                        </div>
+
+                        <div class="file-info" id="fileInfo">No file selected</div>
+
+                        <button type="submit" class="btn-submit">
+                            <i class="fas fa-paper-plane me-2"></i> Submit Assignment
+                        </button>
+                    </form>
+
+                    <div class="submission-details mt-4">
+                        <h5 class="fw-bold mb-2">Submission Details</h5>
+                        <div class="detail-item d-flex justify-content-between border-bottom py-2">
+                            <span class="text-muted">Due Date:</span> <span>{{ assignment.due_date }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    {% block scripts %}
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        const fileInput = document.getElementById('fileInput');
+        const uploadZone = document.getElementById('uploadZone');
+        const fileInfo = document.getElementById('fileInfo');
+
+        fileInput.addEventListener('change', e => {
+            if (e.target.files.length > 0) {
+                const file = e.target.files[0];
+                fileInfo.textContent = `Selected: ${file.name} (${(file.size / 1024 / 1024).toFixed(2)} MB)`;
+                fileInfo.style.background = 'rgba(16,185,129,0.1)';
+                fileInfo.style.color = '#059669';
+            }
+        });
+
+        uploadZone.addEventListener('dragover', e => {
+            e.preventDefault();
+            uploadZone.classList.add('dragover');
+        });
+
+        uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('dragover'));
+
+        uploadZone.addEventListener('drop', e => {
+            e.preventDefault();
+            uploadZone.classList.remove('dragover');
+            if (e.dataTransfer.files.length) {
+                fileInput.files = e.dataTransfer.files;
+                fileInput.dispatchEvent(new Event('change', { bubbles: true }));
+            }
+        });
+
+        document.getElementById('uploadForm').addEventListener('submit', e => {
+            const file = fileInput.files[0];
+            if (!file) {
+                e.preventDefault();
+                alert('Please select a file to upload.');
+                return;
+            }
+            if (file.size > 10 * 1024 * 1024) {
+                e.preventDefault();
+                alert('File size exceeds 5MB limit.');
+            }
+        });
+    </script>
+    {% endblock %}
+
+</body>
+
+</html>
+
+
+
+
+{% endblock %}

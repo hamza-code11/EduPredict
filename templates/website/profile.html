@@ -1,0 +1,296 @@
+<!-- <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<header>
+    <h1>Admin Panel</h1>
+    <nav>
+        <a href="{{ url_for('admin_dashboard') }}">Dashboard</a> |
+        <a href="{{ url_for('create_task') }}">Create Task</a> |
+        <a href="{{ url_for('logout') }}">Logout</a>
+    </nav>
+</header>
+<main>
+ 
+</main>
+<footer>© 2025 Admin Area</footer>
+</body>
+</html> -->
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin{% endblock %}</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Font Awesome (CSS CDN – no CORS issue) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Your Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 512'%3E%3Cpath fill='black' d='M622.34 153.2c12.46 4.86 20.66 16.79 20.66 30.2s-8.2 25.34-20.66 30.2L512 256.9v58.5c0 8.5-5.1 16.2-12.9 19.4l-144 64c-5.2 2.3-11.1 2.3-16.3 0l-144-64c-7.8-3.2-12.9-10.9-12.9-19.4v-58.5L17.66 213.6C5.2 208.7-3 196.8-3 183.4s8.2-25.3 20.7-30.2l300-116.2c7.8-3 16.6-3 24.4 0l280.24 116zM320 64L80 160l240 96 240-96L320 64zM480 384v96h32v-96h-32z'/%3E%3C/svg%3E">
+
+
+    <style>
+        .avatar-circle {
+            width: 100px;
+            height: 100px;
+            font-size: 2.5rem;
+        }
+
+        .card {
+            border: none;
+            border-radius: 12px;
+        }
+
+        .card-header {
+            border-radius: 12px 12px 0 0 !important;
+        }
+
+        .btn {
+            border-radius: 8px;
+            padding: 10px 16px;
+        }
+
+        .form-control,
+        .input-group-text {
+            border-radius: 8px;
+        }
+
+        .shadow-sm {
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+        }
+
+        .account-info {
+            padding: 0 10px;
+        }
+
+        /* Improved Password Input Styling */
+        .password-input-container {
+            position: relative;
+        }
+
+        .password-toggle {
+            cursor: pointer;
+            background-color: #f8f9fa;
+            transition: all 0.3s ease;
+            border-left: 1px solid #e9ecef !important;
+        }
+
+        .password-toggle:hover {
+            background-color: #e9ecef;
+        }
+
+        .password-toggle:active {
+            background-color: #dee2e6;
+        }
+
+        /* Smooth transition for eye icon */
+        .password-toggle i {
+            transition: transform 0.3s ease;
+        }
+
+        .password-toggle.active i {
+            transform: scale(1.1);
+        }
+
+        /* Ensure both cards have equal height on larger screens */
+        @media (min-width: 992px) {
+            .h-100 {
+                height: 100% !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Navbar -->
+    <nav class="navbar-classroom fixed-top d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+            <button class="mobile-menu-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
+            <div class="d-flex align-items-center ms-3">
+                <div><i class="fas fa-graduation-cap fa-2x text-secondary"></i></div>
+                <a href="{{ url_for('admin_dashboard') }}"
+                    class="fs-4 text-secondary ms-2 text-decoration-none"><strong><em>EduPredict</em></strong></a>
+            </div>
+        </div>
+        <div class="d-flex align-items-center me-3">
+            <!-- Avatar Dropdown -->
+            <div class="dropdown">
+                <div class="user-avatar d-flex justify-content-center align-items-center" id="userMenu"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    A
+                </div>
+                <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userMenu">
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" href="{{ url_for('profile') }}">
+                            <i class="fas fa-user-circle me-2 text-primary"></i> Profile
+                        </a>
+                    </li>
+                    <li>
+                        <a class="dropdown-item d-flex align-items-center" href="{{ url_for('logout') }}">
+                            <i class="fas fa-sign-out-alt me-2 text-danger"></i> Logout
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+
+
+        <!-- Main Content -->
+        <div class="content-area">
+
+            <div class="container mt-4">
+                <div class="row g-4">
+                    <!-- Left Side - Form Section -->
+                    <div class="col-lg-8">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-header bg-light">
+                                <h5 class="card-title mb-0">Edit Profile</h5>
+                            </div>
+                            <div class="card-body">
+                                <form method="POST">
+                                    <div class="mb-3">
+                                        <label for="username" class="form-label">Username</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text"><i class="fas fa-user"></i></span>
+                                            <input type="text" name="username" id="username" value="{{ user.username }}"
+                                                class="form-control">
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-4">
+                                        <label for="password" class="form-label">New Password</label>
+                                        <div class="password-input-container">
+                                            <div class="input-group">
+                                                <span class="input-group-text"><i class="fas fa-lock"></i></span>
+                                                <input type="password" name="password" id="password"
+                                                    class="form-control"
+                                                    placeholder="Leave blank to keep current password">
+                                                <span class="input-group-text password-toggle" id="togglePassword">
+                                                    <i class="fas fa-eye"></i>
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="form-text">Password must be Strong</div>
+                                    </div>
+
+                                    <div class="d-flex gap-2">
+                                        <button type="submit" class="btn btn-primary flex-fill">
+                                            <i class="fas fa-save me-2"></i>Update Profile
+                                        </button>
+                                        <a href="{{ url_for('index') }}" class="btn btn-outline-secondary">
+                                            <i class="fas fa-arrow-left me-2"></i>Back
+                                        </a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Side - Profile Information -->
+                    <div class="col-lg-4">
+                        <div class="card shadow-sm h-100">
+                            <div class="card-body text-center d-flex flex-column">
+                                <div class="mb-3">
+                                    <div
+                                        class="avatar-circle bg-primary text-white d-inline-flex align-items-center justify-content-center rounded-circle mb-3">
+                                        <span class="h4 mb-0">{{ user.username[0]|upper }}</span>
+                                    </div>
+                                    <h3 class="card-title mb-1">{{ user.username }}</h3>
+                                    <p class="text-muted">Member since {{ user.created_at.strftime('%B %Y') }}</p>
+                                </div>
+
+                                <div class="mt-auto">
+                                    <hr>
+                                    <div class="account-info">
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="bg-primary bg-opacity-10 p-2 rounded me-3">
+                                                <i class="fas fa-user-tag text-primary"></i>
+                                            </div>
+                                            <div class="text-start">
+                                                <p class="mb-0 small text-muted">Role</p>
+                                                <p class="mb-0 fw-bold">{{ user.role }}</p>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center mb-3">
+                                            <div class="bg-primary bg-opacity-10 p-2 rounded me-3">
+                                                <i class="fas fa-calendar-alt text-primary"></i>
+                                            </div>
+                                            <div class="text-start">
+                                                <p class="mb-0 small text-muted">Joined</p>
+                                                <p class="mb-0 fw-bold">{{ user.created_at.strftime('%Y-%m-%d %H:%M') }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <footer class="footer">
+                <p>EduPredict Classroom - Created for E-Project purposes</p>
+                <p>This is official EduPredict Classroom</p>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Bootstrap Bundle (with Popper) – required for dropdown -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Mobile sidebar toggle
+        document.getElementById('menuBtn').addEventListener('click', function () {
+            document.getElementById('sidebar').classList.toggle('open');
+        });
+    </script>
+
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const togglePassword = document.getElementById('togglePassword');
+            const passwordInput = document.getElementById('password');
+            const eyeIcon = togglePassword.querySelector('i');
+
+            togglePassword.addEventListener('click', function () {
+                // Toggle the password field type
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+
+                // Toggle the eye icon and active state
+                if (type === 'text') {
+                    eyeIcon.classList.remove('fa-eye');
+                    eyeIcon.classList.add('fa-eye-slash');
+                    togglePassword.classList.add('active');
+                } else {
+                    eyeIcon.classList.remove('fa-eye-slash');
+                    eyeIcon.classList.add('fa-eye');
+                    togglePassword.classList.remove('active');
+                }
+
+                // Keep focus on password field
+                passwordInput.focus();
+            });
+        });
+    </script>
+</body>
+
+</html>

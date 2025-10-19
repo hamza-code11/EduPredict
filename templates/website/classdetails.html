@@ -1,0 +1,422 @@
+{% extends "layouts/website_layout.html" %}
+{% block content %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ class_obj.class_name }} - Assignments</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 512'%3E%3Cpath fill='black' d='M622.34 153.2c12.46 4.86 20.66 16.79 20.66 30.2s-8.2 25.34-20.66 30.2L512 256.9v58.5c0 8.5-5.1 16.2-12.9 19.4l-144 64c-5.2 2.3-11.1 2.3-16.3 0l-144-64c-7.8-3.2-12.9-10.9-12.9-19.4v-58.5L17.66 213.6C5.2 208.7-3 196.8-3 183.4s8.2-25.3 20.7-30.2l300-116.2c7.8-3 16.6-3 24.4 0l280.24 116zM320 64L80 160l240 96 240-96L320 64zM480 384v96h32v-96h-32z'/%3E%3C/svg%3E">
+
+    <style>
+        .solid {
+            border: 2px solid red;
+        }
+
+        :root {
+            --primary: #1a73e8;
+            --primary-dark: #0d47a1;
+            --secondary: #34a853;
+            --accent: #fbbc04;
+            --light: #f8f9fa;
+            --dark: #202124;
+            --gray: #5f6368;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .content-area {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .nav-tabs {
+            border-bottom: 2px solid #e9ecef;
+            margin-bottom: 1.5rem;
+        }
+
+        .nav-tabs .nav-link {
+            color: var(--gray);
+            font-weight: 500;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px 8px 0 0;
+            transition: all 0.3s ease;
+        }
+
+        .nav-tabs .nav-link:hover {
+            color: var(--primary);
+            background-color: rgba(26, 115, 232, 0.05);
+        }
+
+        .nav-tabs .nav-link.active {
+            color: var(--primary);
+            background-color: white;
+            border-bottom: 3px solid var(--primary);
+            font-weight: 600;
+        }
+
+        .card {
+            border: none;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            margin-bottom: 1.5rem;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            border-color: var(--primary);
+            border-radius: 8px;
+            font-weight: 500;
+            padding: 10px 20px;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+            border-color: var(--primary-dark);
+        }
+
+        .badge {
+            font-weight: 500;
+            padding: 8px 12px;
+            border-radius: 20px;
+        }
+
+        .progress {
+            height: 12px;
+            border-radius: 10px;
+        }
+
+        .progress-bar {
+            border-radius: 10px;
+        }
+
+        .modal-header {
+            background-color: var(--primary);
+            color: white;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .modal-content {
+            border-radius: 12px;
+            border: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .table th {
+            border-top: none;
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .student-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .assignment-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: #dee2e6;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .nav-tabs .nav-link {
+                padding: 10px 15px;
+                font-size: 0.9rem;
+            }
+
+            .assignment-actions {
+                justify-content: flex-start;
+                margin-top: 15px;
+            }
+
+            .table-responsive {
+                font-size: 0.9rem;
+            }
+
+            .progress {
+                height: 10px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .content-area {
+                padding: 0px;
+            }
+
+            .nav-tabs {
+                flex-direction: column;
+                border-bottom: none;
+            }
+
+            .nav-tabs .nav-item {
+                width: 100%;
+                margin-bottom: 5px;
+            }
+
+            .nav-tabs .nav-link {
+                border-radius: 8px;
+                text-align: center;
+            }
+
+            .nav-tabs .nav-link.active {
+                border-bottom: 3px solid var(--primary);
+            }
+
+            .d-flex.justify-content-between {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .d-flex.justify-content-between h3 {
+                margin-bottom: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Page Header as Cover -->
+    <div class="class-header text-white d-flex flex-column flex-md-row justify-content-between align-items-center p-4 rounded-3 mb-4 shadow-sm"
+        style="width: 100%; min-height: 180px; transition: background 0.5s ease;">
+        <div>
+            <h1 class="h2 mb-1">{{ class_obj.class_name }}</h1>
+            <p class="mb-0">Manage assignments, students, and track progress</p>
+        </div>
+        <div class="d-flex flex-column flex-sm-row align-items-sm-center gap-3 mt-3 mt-md-0">
+            <span class="badge bg-light text-dark py-2 px-3 fs-6">
+                <i class="fas fa-users me-1"></i> {{ students|length }} Students
+            </span>
+            <span class="badge bg-light text-dark py-2 px-3 fs-6">
+                <i class="fas fa-tasks me-1"></i> {{ assignments|length }} Assignments
+            </span>
+        </div>
+    </div>
+
+    <!-- Gradient JS -->
+    <script>
+        function getRandomGradient() {
+            const colors = ['#ff6b6b', '#6bc1ff', '#6bff95', '#ffde6b', '#c36bff', '#ff6bde', '#6bfff4'];
+            const color1 = colors[Math.floor(Math.random() * colors.length)];
+            let color2 = colors[Math.floor(Math.random() * colors.length)];
+            while (color1 === color2) {
+                color2 = colors[Math.floor(Math.random() * colors.length)];
+            }
+            return `linear-gradient(135deg, ${color1}, ${color2})`;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const header = document.querySelector('.class-header');
+            if (header) {
+                header.style.background = getRandomGradient();
+            }
+        });
+    </script>
+
+
+
+    <!-- Nav Tabs -->
+    <ul class="nav nav-tabs" id="classroomTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="assignments-tab" data-bs-toggle="tab" data-bs-target="#assignments"
+                type="button" role="tab">
+                <i class="fas fa-tasks me-2"></i>Assignments
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="students-tab" data-bs-toggle="tab" data-bs-target="#students" type="button"
+                role="tab">
+                <i class="fas fa-users me-2"></i>Students
+            </button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button class="nav-link" id="progress-tab" data-bs-toggle="tab" data-bs-target="#progress" type="button"
+                role="tab">
+                <i class="fas fa-chart-line me-2"></i>Progress
+            </button>
+        </li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content mt-4">
+        <!-- Assignments Tab -->
+        <div class="tab-pane fade show active" id="assignments" role="tabpanel">
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+                <h3 class="mb-2">Assignments</h3>
+            </div>
+
+            {% if assignments %}
+            <div class="row">
+                {% for assignment in assignments %}
+                <div class="col-lg-12 col-xl-12 mb-4">
+                    <a href="{{ url_for('assignment_detail', assignment_id=assignment['_id']) }}" style="text-decoration: none;">
+                        <div class="card h-100">
+                            <div class="card-body d-flex flex-column">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h5 class="card-title fw-bold text-dark">{{ assignment.title }}</h5>
+                                    <span class="badge bg-warning text-dark">
+                                        <i class="fas fa-clock me-1"></i> Due: {{ assignment.due_date }}
+                                    </span>
+                                </div>
+                                <p class="card-text text-muted flex-grow-1">{{ assignment.description }}</p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <i class="fas fa-tasks"></i>
+                <h4>No Assignments Yet</h4>
+                <p>Create your first assignment to get started.</p>
+                <button class="btn btn-primary mt-2" data-bs-toggle="modal" data-bs-target="#createAssignmentModal">
+                    <i class="fas fa-plus me-2"></i> Create Assignment
+                </button>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Students Tab -->
+<div class="tab-pane fade show" id="students" role="tabpanel">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3>Enrolled Students</h3>
+        <span class="badge bg-primary">{{ students|length }} Students</span>
+    </div>
+
+    {% if students %}
+    <div class="row">
+        {% for student in students %}
+        <div class="col-md-6 col-lg-4 mb-3">
+            <div class="card">
+                <div class="card-body d-flex align-items-center">
+                    <img src="https://i.pravatar.cc/60?img={{ loop.index }}" class="student-avatar me-3" alt="Avatar">
+                    <div>
+                        <h6 class="mb-0 fw-bold">{{ student.username }}</h6>
+                        <small class="text-muted">Student</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="empty-state text-center py-4">
+        <i class="fas fa-users fa-3x mb-3"></i>
+        <h4>No Students Enrolled</h4>
+        <p>Students will appear here once they join your class.</p>
+    </div>
+    {% endif %}
+</div>
+
+
+
+        <!-- Progress Tab -->
+        <div class="tab-pane fade" id="progress" role="tabpanel">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h3>Your Progress</h3>
+                    <p class="text-muted mb-0">Track your assignment completion and performance</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <a href="{{ url_for('student_progress', class_id=class_obj._id) }}" target="_blank"
+                        class="btn btn-outline-primary btn-sm">
+                        <i class="fas fa-chart-bar me-1"></i> Run
+                    </a>
+
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Student</th>
+                            <th class="text-center">Total</th>
+                            <th class="text-center">Completed</th>
+                            <th class="text-center">Incomplete</th>
+                            <th>Progress</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center">
+                                    <img src="https://i.pravatar.cc/40?u={{ user._id }}" class="student-avatar me-2"
+                                        alt="Avatar">
+                                    <span>{{ user.username }}</span>
+                                </div>
+                            </td>
+                            <td class="text-center">{{ total_assignments }}</td>
+                            <td class="text-center">{{ completed_assignments }}</td>
+                            <td class="text-center">{{ incomplete_assignments }}</td>
+                            <td>
+                                <div class="progress-bar {{ 'w-' ~ progress_percent }}" role="progressbar"
+                                    aria-valuenow="{{ progress_percent }}" aria-valuemin="0" aria-valuemax="100">
+                                </div>
+
+
+                                <small class="text-muted">{{ progress_percent }}%</small>
+                            </td>
+                            <td>
+                                <span class="badge {{ badge_class }}">
+                                    {{ status }}
+                                </span>
+                            </td>
+
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+
+    </div>
+
+
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>
+{% endblock %}

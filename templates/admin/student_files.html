@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ student.username }} - Files</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 640 512'%3E%3Cpath fill='black' d='M622.34 153.2c12.46 4.86 20.66 16.79 20.66 30.2s-8.2 25.34-20.66 30.2L512 256.9v58.5c0 8.5-5.1 16.2-12.9 19.4l-144 64c-5.2 2.3-11.1 2.3-16.3 0l-144-64c-7.8-3.2-12.9-10.9-12.9-19.4v-58.5L17.66 213.6C5.2 208.7-3 196.8-3 183.4s8.2-25.3 20.7-30.2l300-116.2c7.8-3 16.6-3 24.4 0l280.24 116zM320 64L80 160l240 96 240-96L320 64zM480 384v96h32v-96h-32z'/%3E%3C/svg%3E">
+   
+   <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3a0ca3;
+            --light-bg: #f8f9fa;
+            --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --card-hover-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            background-color: var(--light-bg);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            margin: 0;
+            padding: 0 10px;
+        }
+
+        .header-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 12px;
+            padding: 1.25rem 1.5rem;
+            color: white;
+            margin: 1rem 0 2rem;
+            box-shadow: var(--card-shadow);
+        }
+
+        .file-card {
+            background: white;
+            border-radius: 10px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            box-shadow: var(--card-shadow);
+            border-left: 4px solid var(--primary-color);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            height: auto; /* auto adjust height */
+        }
+
+        .file-card:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--card-hover-shadow);
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .file-icon {
+            background-color: #e9ecef;
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-color);
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+
+        .file-name {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #343a40;
+            word-break: break-word;
+        }
+
+        .file-meta {
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+
+        .btn-view {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 0.45rem 1.2rem;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+        }
+
+        .btn-view:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            color: white;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: #6c757d;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            color: #dee2e6;
+        }
+
+        .btn-close-window {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 0.6rem 1.4rem;
+            transition: all 0.3s ease;
+            margin: 2rem auto 1rem;
+            display: block;
+            width: fit-content;
+        }
+
+        .btn-close-window:hover {
+            background-color: #5a6268;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive Adjustments */
+        @media (max-width: 992px) {
+            .header-section {
+                padding: 1rem;
+                text-align: center;
+            }
+
+            .file-card {
+                padding: 0.9rem;
+            }
+
+            .file-icon {
+                width: 42px;
+                height: 42px;
+                font-size: 1.2rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .file-info {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .file-icon {
+                margin-bottom: 0.5rem;
+            }
+
+            .btn-view {
+                width: 100%;
+                text-align: center;
+                margin-top: 0.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 0 5px;
+            }
+
+            .file-card {
+                padding: 0.75rem;
+            }
+
+            .file-name {
+                font-size: 0.95rem;
+            }
+
+            .btn-view {
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-content">
+        <div class="header-section">
+            <div class="d-flex justify-content-between align-items-center flex-wrap text-center text-md-start">
+                <div>
+                    <h1 class="h4 mb-1">{{ student.username }}</h1>
+                    <p class="mb-0 opacity-75">{{ assignment.title }} - Submitted Files</p>
+                </div>
+                <div class="mt-3 mt-md-0">
+                    <span class="badge bg-light text-dark fs-6">
+                        <i class="fas fa-file me-1"></i>
+                        {{ submissions|length if submissions else 0 }} files
+                    </span>
+                </div>
+            </div>
+        </div>
+
+        {% if submissions %}
+            <div class="files-container">
+                {% for file in submissions %}
+                    <div class="file-card">
+                        <div class="file-info">
+                            <div class="file-icon">
+                                <i class="fas 
+                                    {% if '.pdf' in file.filename %}fa-file-pdf
+                                    {% elif '.doc' in file.filename or '.docx' in file.filename %}fa-file-word
+                                    {% elif '.xls' in file.filename or '.xlsx' in file.filename %}fa-file-excel
+                                    {% elif '.ppt' in file.filename or '.pptx' in file.filename %}fa-file-powerpoint
+                                    {% elif '.jpg' in file.filename or '.jpeg' in file.filename or '.png' in file.filename or '.gif' in file.filename %}fa-file-image
+                                    {% elif '.zip' in file.filename or '.rar' in file.filename %}fa-file-archive
+                                    {% else %}fa-file{% endif %}">
+                                </i>
+                            </div>
+                            <div class="flex-grow-1">
+                                <div class="file-name">{{ file.filename }}</div>
+                                <div class="file-meta">
+                                    <i class="far fa-calendar me-1"></i>
+                                    Uploaded on {{ file.upload_date if file.upload_date else 'Unknown date' }}
+                                </div>
+                            </div>
+                            <a href="{{ url_for('static', filename='uploads/' + file.filename) }}" 
+                               target="_blank" class="btn btn-view">
+                                <i class="fas fa-eye me-1"></i> View
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <i class="fas fa-folder-open"></i>
+                <h3>No Files Found</h3>
+                <p class="text-muted">This student hasn't submitted any files for this assignment yet.</p>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="footer-section">
+        <a href="javascript:window.close();" class="btn btn-close-window">
+            <i class="fas fa-times me-1"></i> Close Window
+        </a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,9 @@
+{% extends "layouts/website_layout.html" %}
+{% block title %}Upload Assignment{% endblock %}
+{% block content %}
+<h2>Upload for: {{ task.title }}</h2>
+<form method="post" enctype="multipart/form-data">
+    <input type="file" name="file" required>
+    <button type="submit">Upload</button>
+</form>
+{% endblock %}
